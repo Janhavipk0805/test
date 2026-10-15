@@ -40,7 +40,7 @@ class LinkedList:
              temp = self.head
              print("List elements:")
              while temp:
-                 print(temp.data, " ")
+                 print(temp.data, end = " ")
                  temp=temp.next
 
 list1 = LinkedList()
