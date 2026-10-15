@@ -25,7 +25,8 @@ class LinkedList:
                   self.head.prev = new_node
                   self.head = new_node
              else:
-                while(p!= pos-1):
+                p=1
+                while(p!= pos-1 and temp.next):
                      temp = temp.next
                      p+=1
                 temp.next = new_node
@@ -48,5 +49,6 @@ list1.append(Node(12))
 list1.append(Node(52))
 list1.append(Node(102))
 list1.append(Node(56))
+list1.insert(Node(90),2)
 list1.print()
 
