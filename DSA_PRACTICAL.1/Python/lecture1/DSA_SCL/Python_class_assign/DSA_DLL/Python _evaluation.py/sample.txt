@@ -1,0 +1,11 @@
+with open("sample.txt","w") as f:
+    f.write("Python is easy\n")
+    f.write("I love programming\n")
+    f.write("Coding is fun\n")
+    f.write("Practice makes perfect\n")
+    f.write("Learning never stops\n)"
+
+    with open("lines.txt","r") as f:
+    lines=f.readlines()
+
+    print("Total number of lines:",len(lines))
