@@ -16,7 +16,7 @@ class Stack:
             if self.isempty():
                   print("Stack is empty")
             else:
-                  print("Stack contains...")
+                  print("\nStack contains...\n")
                   temp = self.top
                   while temp:
                     print(temp.data)
