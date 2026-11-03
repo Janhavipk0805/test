@@ -1,102 +1,137 @@
-# Q1. Stack with Push, Pop, Display, Reverse String, Reverse Stack
-# A stack works on LIFO (Last In First Out) - the last item pushed is the first one popped.
+# Q2. Linear Queue with Enqueue, Dequeue, Display, Reverse using Stack,
+#     Merge two queues, Check if two queues are identical
+# A queue works on FIFO (First In First Out) - the first item added is the first one removed.
 
-class Stack:
+class Queue:
     def __init__(self):
-        # create an empty list to store the stack elements
-        # the END of the list is the TOP of the stack
+        # empty list to store queue elements
+        # index 0 = FRONT of the queue, last index = REAR of the queue
         self.items = []
 
     def is_empty(self):
-        # stack is empty when the list has no elements
+        # queue is empty when the list has no elements
         return len(self.items) == 0
 
-    # ---------- 1. Push ----------
-    def push(self, value):
-        # add the new element at the top (end of the list)
+    # ---------- 1. Enqueue ----------
+    def enqueue(self, value):
+        # insert the new element at the rear (end of the list)
         self.items.append(value)
-        print(value, "pushed into the stack")
 
-    # ---------- 2. Pop ----------
-    def pop(self):
-        # if the stack is empty we cannot pop (stack underflow)
+    # ---------- 2. Dequeue ----------
+    def dequeue(self):
+        # if the queue is empty we cannot remove anything (queue underflow)
         if self.is_empty():
-            print("Stack Underflow! Stack is empty")
+            print("Queue Underflow! Queue is empty")
             return None
-        # remove and return the top element
-        return self.items.pop()
+        # remove and return the element at the front (index 0)
+        return self.items.pop(0)
 
     # ---------- 3. Display ----------
     def display(self):
         if self.is_empty():
-            print("Stack is empty")
+            print("Queue is empty")
             return
-        print("Stack (top to bottom):")
-        # print from the last element (top) to the first element (bottom)
-        for i in range(len(self.items) - 1, -1, -1):
-            print(self.items[i])
+        print("Queue (front to rear):", end=" ")
+        for item in self.items:
+            print(item, end=" ")
+        print()
 
-    # ---------- 4. Reverse a string using stack ----------
-    def reverse_string(self, text):
-        temp = Stack()                 # use a new stack so our main stack is not disturbed
-        for ch in text:
-            temp.push_silent(ch)       # push every character one by one
-        reversed_text = ""
-        while not temp.is_empty():
-            reversed_text = reversed_text + temp.pop()   # pop gives characters in reverse order
-        return reversed_text
-
-    def push_silent(self, value):
-        # same as push but without printing (used inside other functions)
-        self.items.append(value)
-
-    # ---------- 5. Reverse the stack using another stack ----------
-    def reverse_stack(self):
-        another = Stack()              # the second (helper) stack
-        # pop every element from the main stack and push it into the other stack
-        # the order gets reversed during this transfer
+    # ---------- 4. Reverse the queue using a stack ----------
+    def reverse(self):
+        stack = []                              # a stack made using a list
+        # take every element out from the front of the queue and push it on the stack
         while not self.is_empty():
-            another.push_silent(self.pop())
-        # the other stack now holds the reversed stack, so make it the main stack
-        self.items = another.items
-        print("Stack reversed")
+            stack.append(self.dequeue())
+        # pop from the stack (last in comes out first) and enqueue back
+        # so the queue now has the elements in reverse order
+        while len(stack) > 0:
+            self.enqueue(stack.pop())
+        print("Queue reversed")
+
+
+# ---------- 5. Merge two queues into one ----------
+def merge(q1, q2):
+    merged = Queue()                 # a new empty queue for the result
+    for item in q1.items:            # first add all elements of queue 1
+        merged.enqueue(item)
+    for item in q2.items:            # then add all elements of queue 2
+        merged.enqueue(item)
+    return merged
+
+
+# ---------- 6. Check if two queues are identical ----------
+def is_identical(q1, q2):
+    # queues with different sizes can never be identical
+    if len(q1.items) != len(q2.items):
+        return False
+    # compare element by element (same position must have the same value)
+    for i in range(len(q1.items)):
+        if q1.items[i] != q2.items[i]:
+            return False
+    return True
+
+
+def read_queue():
+    # helper: take elements from the user and make a queue
+    q = Queue()
+    values = input("Enter elements separated by space: ").split()
+    for v in values:
+        q.enqueue(v)
+    return q
 
 
 # ---------------- Main program (menu) ----------------
-s = Stack()
+queue1 = Queue()                     # the main queue used for operations 1 to 4
 
 while True:
-    print("\n----- STACK MENU -----")
-    print("1. Push")
-    print("2. Pop")
+    print("\n----- QUEUE MENU -----")
+    print("1. Enqueue")
+    print("2. Dequeue")
     print("3. Display")
-    print("4. Reverse String using Stack")
-    print("5. Reverse Stack using another Stack")
-    print("6. Exit")
+    print("4. Reverse the queue using stack")
+    print("5. Merge two queues into one")
+    print("6. Check if two queues are identical")
+    print("7. Exit")
 
     choice = input("Enter your choice: ")
 
     if choice == "1":
-        value = input("Enter value to push: ")
-        s.push(value)
+        value = input("Enter value to enqueue: ")
+        queue1.enqueue(value)
+        print(value, "enqueued")
 
     elif choice == "2":
-        removed = s.pop()
+        removed = queue1.dequeue()
         if removed is not None:
-            print("Popped element:", removed)
+            print("Dequeued element:", removed)
 
     elif choice == "3":
-        s.display()
+        queue1.display()
 
     elif choice == "4":
-        text = input("Enter a string: ")
-        print("Reversed string:", s.reverse_string(text))
+        queue1.reverse()
+        queue1.display()
 
     elif choice == "5":
-        s.reverse_stack()
-        s.display()
+        print("Enter elements of the first queue")
+        a = read_queue()
+        print("Enter elements of the second queue")
+        b = read_queue()
+        result = merge(a, b)
+        print("Merged queue:")
+        result.display()
 
     elif choice == "6":
+        print("Enter elements of the first queue")
+        a = read_queue()
+        print("Enter elements of the second queue")
+        b = read_queue()
+        if is_identical(a, b):
+            print("Both queues are identical")
+        else:
+            print("Queues are NOT identical")
+
+    elif choice == "7":
         print("Program ended")
         break
 
